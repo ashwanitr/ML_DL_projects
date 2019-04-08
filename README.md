@@ -1,1 +1,1 @@
-# machine_learning_projects
+# Some important ML and DL projects
