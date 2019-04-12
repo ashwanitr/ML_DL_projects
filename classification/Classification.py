@@ -67,23 +67,24 @@ val_steps = validation_generator.__len__()
 
 #Base-Model
 architecture=C.Architecture
-if architecture=1:
+if architecture==1:
     base_model = InceptionResNetV2(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
-    architecture_name=InceptionResNetV2
-el if architecture=2:
+    architecture_name="InceptionResNetV2"
+elif architecture==2:
     base_model = DenseNet121(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
-    architecture_name=DenseNet121
-el if architecture=3:
+    architecture_name="DenseNet121"
+elif architecture==3:
     base_model = ResNet50(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
-    architecture_name=ResNet50
-el if architecture=4:
+    architecture_name="ResNet50"
+elif architecture==4:
     base_model = NASNetMobile(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
-    architecture_name=NASNetMobile
-el if architecture=5:
+    architecture_name="NASNetMobile"
+elif architecture==5:
     base_model = MobileNet(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
-    architecture_name=MobileNet
-el if architecture=6:
+    architecture_name="MobileNet"
+elif architecture==6:
     base_model = InceptionV3(input_shape=(img_height, img_width, 3), weights='imagenet', include_top=False)
+    architecture_name="InceptionV3"
 else:
     print ("Wrong Architecture Input")
 x = base_model.output
@@ -98,9 +99,9 @@ print(f'=> creating model replicas for distributed training across {ngpus} gpus 
 model.compile(optimizer=nadam, loss='categorical_crossentropy',metrics=['accuracy'])
 print('=> done building model <=')
 top_weights_path = os.path.join(
-                                os.path.abspath(model_path), 'Weights/top_model_weights_'+architecture_name+'_'+layers_frozen+'Frozen_Layers.h5')
+                                os.path.abspath(model_path), 'Weights/top_model_weights_'+architecture_name+'_'+str(layers_frozen)+'Frozen_Layers.h5')
 final_weights_path = os.path.join(
-                                  os.path.abspath(model_path), 'Weights/model_weights_'+architecture_name+'_'+layers_frozen+'Frozen_Layers.h5')
+                                  os.path.abspath(model_path), 'Weights/model_weights_'+architecture_name+'_'+str(layers_frozen)+'Frozen_Layers.h5')
 
 
 
@@ -122,7 +123,7 @@ history = model.fit_generator(train_generator, steps_per_epoch=train_steps, epoc
 print('=> loading best weights <=')
 model.load_weights(final_weights_path)
 print('=> saving final model <=')
-Final_Weights='Weights/model_'+architecture_name+"_"+layers_frozen+'Frozen_Layers.h5'
+Final_Weights='Weights/model_'+architecture_name+"_"+str(layers_frozen)+'Frozen_Layers.h5'
 pmodel.save(os.path.join(os.path.abspath(model_path), Final_Weights))
 
 
@@ -163,3 +164,6 @@ for i in results['Filename']:
     actual.append(head)
 results['Actual']=actual
 results.to_csv("CSV/"+CSV_Name)
+print("CSV Has Been Generated with the name :"+CSV_Name+" inside the CSV folder in the main folder")
+print("Use This CSV File With the Error_Analysis.py for Error Images Segregation and Analysis")
+

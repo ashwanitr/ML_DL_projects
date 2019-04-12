@@ -78,10 +78,17 @@ for i in range(len(wrong['Filename'])):
         if not os.path.isdir(dest+j):
             os.mkdir(dest+j)
         if not os.path.isdir(dest+j+"/"+prediction[i]):
-            os.mkdir(dest+j+"/"+prediction[i])
+            if j != prediction[i]:
+                os.mkdir(dest+j+"/"+prediction[i])
         dest_image=dest+j+"/"+prediction[i]+"/"+image[i]
         if os.path.isfile(src_image):
             shutil.copy(src_image,dest_image)
+for i in os.listdir(dest):
+    for j in os.listdir(dest+"/"+i):
+        if len(os.listdir(dest+"/"+i+"/"+j))==0:
+            os.rmdir(dest+"/"+i+"/"+j)
+print("Error Images have been generated and segregated in the main folder under Error_Images Directory")
+print("Various CSV's have been generated in the main folder under CSV Directory")
 
 
 
